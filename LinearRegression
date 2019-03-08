@@ -1,1 +1,100 @@
+#importing libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 
+#importing data set as a pandas DataFrame 
+s_data = pd.read_csv('Data.csv')
+print(s_data.shape)
+s_data.head()
+
+#building X and Y variables
+X = s_data['Age'].values
+Y = s_data['Salary'].values
+print(X)
+print(Y)
+
+#mean of X and Y
+mean_x = np.mean(X)
+mean_y = np.mean(Y)
+
+print(mean_x)
+print(mean_y)
+
+#scattering the plot
+plt.scatter(X,Y,color='r',label='available data')
+plt.scatter(mean_x,mean_y,color='b',label='mean',marker='*')
+
+plt.title('Age vs. Salary')
+plt.xlabel('Age')
+plt.ylabel('Salary')
+plt.legend()
+plt.show()
+
+#calculating m and c for best fit line
+
+num = 0
+den = 0
+n = len(X)
+
+for i in range(n):
+    num += (X[i] - mean_x) * (Y[i] - mean_y)
+    den += ((X[i] - mean_x) ** 2)
+
+m = num / den
+
+c = mean_y - (m * mean_x)
+
+print('m : ',m)
+print('c : ',c)
+
+#regression line
+XX = X
+YY = m * XX + c
+
+#scattering the plot
+plt.scatter(X,Y,color='r',label='available data')
+plt.scatter(mean_x,mean_y,color='b',label='mean',marker='*')
+plt.plot(XX,YY,color='g',label='Regression line',linewidth = 0.8)
+
+plt.title('Age vs. Salary')
+plt.xlabel('Age')
+plt.ylabel('Salary')
+plt.legend()
+plt.show()
+
+#calculating Rsquared value
+
+numer = 0
+denom = 0
+r2 = 0
+
+for i in range(n):
+    numer += np.mean((YY - mean_y)**2)
+    denom += np.mean((Y - mean_y)**2)
+    
+print(numer)
+print(denom)
+
+r2 = numer / denom
+print('R2 value:',r2)
+
+#prediction of salary
+out_sal = 0
+inp_exp = float(input('Please enter your experience in years : '))
+
+out_sal = m * inp_exp + c
+
+print('Salary should be approximately : ',out_sal)
+
+#scattering the plot with predicted value
+plt.scatter(X,Y,color='r',label='available data')
+plt.scatter(mean_x,mean_y,color='b',label='mean',marker='*')
+plt.plot(XX,YY,color='g',label='Regression line',linewidth = 0.8)
+plt.scatter(inp_exp,out_sal,color='k',label='Predicted value',linewidth=3,marker='x')
+
+plt.title('Age vs. Salary')
+plt.xlabel('Age')
+plt.ylabel('Salary')
+plt.legend()
+plt.show()
